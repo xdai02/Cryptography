@@ -1,2 +1,123 @@
 \chapter{数论}
 
+\section{最大公约数 / 最小公倍数}
+
+\subsection{最大公约数（GCD, Greatest Common Divisor）}
+
+两个整数$ a $和$ b $的最大公约数$ gcd(a, b) $为能够同时整除$ a $和$ b $的最大整数。\\
+
+例如：
+
+\begin{itemize}
+    \item $ gcd(24, 36) = 12 $
+    \item $ gcd(17, 22) = 1 $
+    \item $ gcd(500, 128) = 4 $
+\end{itemize}
+
+计算最大公约数的算法包括递归方法和欧几里得（Euclidean）算法/辗转相除法。\\
+
+\mybox{最大公约数}
+
+\begin{lstlisting}[language=Python]
+def gcd(a, b):
+    if b == 0:
+        return a
+    return gcd(b, a % b)
+
+
+def euclid_gcd(a, b):
+    while b != 0:
+        remainder = a % b
+        a = b
+        b = remainder
+    return a
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+\subsection{最小公倍数（LCD, Least Common Multiple）}
+
+两个整数$ a $和$ b $的最小公倍数$ lcm(a, b) $为能够同时被$ a $和$ b $整除的最小整数。\\
+
+例如：
+
+\begin{itemize}
+    \item $ lcm(24, 36) = 72 $
+    \item $ lcm(17, 22) = 374 $
+    \item $ lcm(500, 128) = 16000 $
+\end{itemize}
+
+\vspace{0.5cm}
+
+\mybox{最小公倍数}
+
+\begin{lstlisting}[language=Python]
+def lcm(a, b):
+    return a * b // gcd(a, b)
+\end{lstlisting}
+
+\newpage
+
+\section{同余定理}
+
+\subsection{模算数（Modular Arithmetic）}
+
+当$ a \in \mathbb{Z} $、$ M \in \mathbb{Z^+} $，那么将$ a $除以$ m $的余数记为$ a\ \text{mod}\ m $。\\
+
+例如：
+
+\begin{itemize}
+    \item 17 mod 5 = 2
+    \item 2001 mod 101 = 82
+    \item -10 mod 3 = -1
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsection{同余定理（Congruence Theorem）}
+
+当$ a \in \mathbb{Z} $、$ b \in \mathbb{Z} $、$ M \in \mathbb{Z^+} $，如果$ m $能够整除$ a - b $，那么就称$ a $和$ b $对模$ m $同余，记作$ a \equiv b\ (\text{mod}\ m) $。\\
+
+因此，
+
+\vspace{-1cm}
+
+\begin{align}
+    a \equiv b\ (\text{mod}\ m) \leftrightarrow a\ \text{mod}\ m \equiv b\ \text{mod}\ m
+\end{align}
+
+例如：
+
+\begin{itemize}
+    \item $ 17 \equiv 5\ (\text{mod}\ 6) $
+    \item $ 17 \equiv 12\ (\text{mod}\ 5) $
+    \item $ 24 \equiv 3\ (\text{mod}\ 7) $
+\end{itemize}
+
+\vspace{0.5cm}
+
+当$ a \equiv b\ (\text{mod}\ m) $、$ c \equiv d\ (\text{mod}\ m) $，同余定理满足以下性质：
+
+\begin{itemize}
+    \item $ a + c \equiv b + d\ (\text{mod}\ m) $
+    \item $ ac \equiv bd\ (\text{mod}\ m) $
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}
+    \mybox{Exercise}\\
+    因为$ 7 \equiv 2\ (\text{mod}\ 5) $、$ 11 \equiv 1\ (\text{mod}\ 5) $。\\
+    (a) $ 7 + 11\ (\text{mod}\ 5) = 2 + 1 \ (\text{mod}\ 5) = 3 $\\
+    (b) $ 7 \cdot 11\ (\text{mod}\ 5) = 2 \cdot 1 \ (\text{mod}\ 5) = 2 $
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\begin{tcolorbox}
+    \mybox{Exercise}\\
+    (a) $ 7^{10} \text{mod}\ 5 = 2^{10} \text{mod}\ 5 = 4 $\\
+    (b) $ 7^{100} \text{mod}\ 3 = 1^{100} \text{mod}\ 5 = 1 $
+\end{tcolorbox}
+
+\newpage
