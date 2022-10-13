@@ -20,6 +20,20 @@
 
 大部分商业的加密算法是公开的，而军用的加密算法是保密的。\\
 
+\subsection{加密算法}
+
+一种最简单的加密算法就是换位密码/转置密码（Transposition Cipher），它将明文中的字符以某种规则移动位置，形成密文。\\
+
+例如栅栏密码（Rail Fence Cipher），将明文的字符在行与行之间交替，形成密文。\\
+
+比如有一段明文“meet me after the party”，将其分成两行交错排列，得到：\\
+
+m\hspace{0.3cm}e\hspace{0.3cm}m\hspace{0.3cm}a\hspace{0.3cm}t\hspace{0.3cm}r\hspace{0.3cm}h\hspace{0.3cm}p\hspace{0.3cm}r\hspace{0.3cm}y
+
+\hspace{0.4cm}e\hspace{0.4cm}t\hspace{0.4cm}e\hspace{0.3cm}f\hspace{0.4cm}e\hspace{0.3cm}t\hspace{0.3cm}e\hspace{0.3cm}a\hspace{0.3cm}t\\
+
+这种加密方式仅仅只是打乱了顺序，并没有改变明文中的字符和出现频率，因此很容易破解。\\
+
 \subsection{安全性}
 
 加密算法的安全性分为：
@@ -418,6 +432,130 @@ def decrypt(ciphertext, key):
     \item 密钥的配送：目标端如果想解密就必须拿到密钥，如果能够机密地传输密钥给目标端，那为什么不直接将原文机密地传送给目标端呢？
 
     \item 密钥的保存：每一个明文都需要保存一个同样长度的密钥。
+\end{itemize}
+
+\newpage
+
+\section{Playfair密码}
+
+\subsection{Playfair密码（Playfair Cipher）}
+
+Playfair密码是一种使用一个关键词方格来加密字符对的加密法，在1854年由Charles Wheatstone发明。曾在一战时期被英军所使用，二战时期澳大利亚所使用。\\
+
+首先选取一个英文单词作为密钥，将这个单词（去除重复字母）填入一个$ 5 \times 5 $的矩阵中，剩余的位置按照字母表顺序填入方格中，其中$ I $和$ J $视作同一个字母。\\
+
+例如选取单词PLAYFAIR作为密钥，生成的密钥矩阵如下：
+
+\[
+    \begin{bmatrix}
+        P & L & A & Y & F \\
+        I & R & B & C & D \\
+        E & G & H & K & M \\
+        N & O & Q & S & T \\
+        U & V & W & X & Z
+    \end{bmatrix}
+\]\\
+
+假设需要加密的明文为HELLO THERE，将明文中的字符两两配对。当一对中出现两个相同字母时，用x分隔。当最后一对只剩一个字母时，也是用x配对。
+
+\begin{itemize}
+    \item 明文：HELLO THERE
+    \item 配对：HE LX LO TH ER EX
+\end{itemize}
+
+对于每一对字母，如果它们在密钥矩阵中位于同一行，将它们替换为各自右边的字母，如HE加密为KG。如果它们位于同一列，将它们替换为各自下面的字母，如LO加密为RV。其它情况，将它们的列下标互换，如LX加密为YV。
+
+\begin{itemize}
+    \item 密文：KG YV RV QM GI KU
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsection{解密}
+
+假设目前截获了一份使用Playfair加密的密文和对应的原文，以及一个不完整的密钥矩阵，现在需要对另一份密文进行解密。
+
+\begin{itemize}
+    \item 明文：THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG
+    \item 密文：RMAPLHBMUAWRVDPWHLISNPXGEGIRBEVZHNEV
+    \item 待解密密文：RMTGNTEATG
+    \item 不完整的密钥矩阵：
+\end{itemize}
+
+\[
+    \begin{bmatrix}
+          &   &   & A & T \\
+          & U &   & B & C \\
+          &   & I &   &   \\
+        N &   & P &   & S \\
+          & W &   &   & Z
+    \end{bmatrix}
+\]\\
+
+解密的方法就是根据已有的一组明文和密文，推算出完整的密钥矩阵。再根据密钥矩阵，反向利用Playfair的加密方法进行解密。\\
+
+首先将已有的明文和密文进行两两匹配：
+
+\begin{itemize}
+    \item 明文：TH EQ UI CK BR OW NF OX JU MP SO VE RT HE LA ZY DO GX
+    \item 密文：RM AP LH BM UA WR VD PW HL IS NP XG EG IR BE VZ HN EV
+\end{itemize}
+
+可以发现在这些配对中，有些配对在明文和密文中出现了相同的字母：
+
+\begin{itemize}
+    \item 明文：TH EQ UI CK BR \textcolor{red}{OW} NF OX JU MP SO VE RT HE LA \textcolor{blue}{ZY} DO GX
+    \item 密文：RM AP LH BM UA \textcolor{red}{WR} VD PW HL IS NP XG EG IR BE \textcolor{blue}{VZ} HN EV
+\end{itemize}
+
+这种情况只有可能发现在被加密的两个字母出现在相邻的位置上，这样被加密时，使用它们各自右边或下面的字母，就会出现重复。\\
+
+根据这个信息，可以推算出$ V $、$ Y $、$ R $、$ O $的位置。
+
+\[
+    \begin{bmatrix}
+                            & \textcolor{red}{R} &   & A                   & T \\
+                            & U                  &   & B                   & C \\
+                            &                    & I &                     &   \\
+        N                   & \textcolor{red}{O} & P &                     & S \\
+        \textcolor{blue}{V} & W                  &   & \textcolor{blue}{Y} & Z
+    \end{bmatrix}
+\]\\
+
+由于秘钥矩阵后，后面的字母都是按照字母表的顺序排列的，所以推算出一部分缺失的字母。
+
+\[
+    \begin{bmatrix}
+          & R &                    & A                  & T \\
+          & U &                    & B                  & C \\
+          &   & I                  &                    &   \\
+        N & O & P                  & \textcolor{red}{Q} & S \\
+        V & W & \textcolor{red}{X} & Y                  & Z
+    \end{bmatrix}
+\]\\
+
+再次根据已有的明文和密文，可以推算出其它字母的位置。
+
+\begin{itemize}
+    \item 明文：\textcolor{red}{TH} \textcolor{blue}{EQ} \textcolor{green}{UI} \textcolor{cyan}{CK} BR OW NF OX JU MP SO \textcolor{brown}{VE} RT HE LA ZY \textcolor{purple}{DO} GX
+    \item 密文：\textcolor{red}{RM} \textcolor{blue}{AP} \textcolor{green}{LH} \textcolor{cyan}{BM} UA WR VD PW HL IS NP \textcolor{brown}{XG} EG IR BE VZ \textcolor{purple}{HN} EV
+\end{itemize}
+
+\[
+    \begin{bmatrix}
+        \textcolor{brown}{G}  & R                  & \textcolor{blue}{E}  & A                   & T                  \\
+        \textcolor{pink}{F}   & U                  & \textcolor{green}{L} & B                   & C                  \\
+        \textcolor{purple}{D} & \textcolor{red}{H} & I                    & \textcolor{cyan}{K} & \textcolor{red}{M} \\
+        N                     & O                  & P                    & Q                   & S                  \\
+        V                     & W                  & X                    & Y                   & Z
+    \end{bmatrix}
+\]\\
+
+在破解出完整的密钥矩阵后，就可以利用Playfair的解密方法对密文RMTGNTEATG解密了。
+
+\begin{itemize}
+    \item 密文：RM TG NT EA TG
+    \item 明文：TH AT SG RE AT
 \end{itemize}
 
 \newpage

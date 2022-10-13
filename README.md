@@ -6,16 +6,11 @@
     - 1.3 单表密码
     - 1.4 维吉尼亚密码
     - 1.5 一次性密码本
+    - 1.6 Playfair密码
 
+- 第2章：数论
+    - 2.1 
 
-
-Transposition Ciphers
-Rail Fence cipher
-Magic Squares
-Playfair Cipher
-Product Ciphers
-
-Number Theory
 
 Hill Cipher
 
