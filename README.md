@@ -11,16 +11,13 @@
 - 第2章：数论
     - 2.1 最大公约数 / 最小公倍数
     - 2.2 同余定理
+    - 2.3 希尔密码
 
 
 公钥密码学：RSA、El-Gamal、格、加密与签名、Diffie-Hellman
 分组密码：AES、DES
 HASH：MD5、SHA
 
-Hill Cipher
-
 Fields, Rings
-
 El-Gamal & ECC
-
 Pre-Amble

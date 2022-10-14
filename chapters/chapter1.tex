@@ -454,7 +454,9 @@ Playfair密码是一种使用一个关键词方格来加密字符对的加密法
         N & O & Q & S & T \\
         U & V & W & X & Z
     \end{bmatrix}
-\]\\
+\]
+
+\vspace{0.5cm}
 
 假设需要加密的明文为HELLO THERE，将明文中的字符两两配对。当一对中出现两个相同字母时，用x分隔。当最后一对只剩一个字母时，也是用x配对。
 
@@ -490,7 +492,9 @@ Playfair密码是一种使用一个关键词方格来加密字符对的加密法
         N &   & P &   & S \\
           & W &   &   & Z
     \end{bmatrix}
-\]\\
+\]
+
+\vspace{0.5cm}
 
 解密的方法就是根据已有的一组明文和密文，推算出完整的密钥矩阵。再根据密钥矩阵，反向利用Playfair的加密方法进行解密。\\
 
@@ -520,7 +524,9 @@ Playfair密码是一种使用一个关键词方格来加密字符对的加密法
         N                   & \textcolor{red}{O} & P &                     & S \\
         \textcolor{blue}{V} & W                  &   & \textcolor{blue}{Y} & Z
     \end{bmatrix}
-\]\\
+\]
+
+\vspace{0.5cm}
 
 由于秘钥矩阵后，后面的字母都是按照字母表的顺序排列的，所以推算出一部分缺失的字母。
 
@@ -532,7 +538,9 @@ Playfair密码是一种使用一个关键词方格来加密字符对的加密法
         N & O & P                  & \textcolor{red}{Q} & S \\
         V & W & \textcolor{red}{X} & Y                  & Z
     \end{bmatrix}
-\]\\
+\]
+
+\vspace{0.5cm}
 
 再次根据已有的明文和密文，可以推算出其它字母的位置。
 
@@ -549,7 +557,9 @@ Playfair密码是一种使用一个关键词方格来加密字符对的加密法
         N                     & O                  & P                    & Q                   & S                  \\
         V                     & W                  & X                    & Y                   & Z
     \end{bmatrix}
-\]\\
+\]
+
+\vspace{0.5cm}
 
 在破解出完整的密钥矩阵后，就可以利用Playfair的解密方法对密文RMTGNTEATG解密了。
 

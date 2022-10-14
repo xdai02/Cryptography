@@ -1,15 +1,15 @@
 def gcd(a, b):
-    if b == 0:
-        return a
-    return gcd(b, a % b)
-
-
-def euclid_gcd(a, b):
     while b != 0:
         remainder = a % b
         a = b
         b = remainder
     return a
+
+
+def euclid_gcd(a, b):
+    if b == 0:
+        return a
+    return gcd(b, a % b)
 
 
 def lcm(a, b):

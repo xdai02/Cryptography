@@ -14,23 +14,23 @@
     \item $ gcd(500, 128) = 4 $
 \end{itemize}
 
-计算最大公约数的算法包括递归方法和欧几里得（Euclidean）算法/辗转相除法。\\
+欧几里得（Euclidean）算法/辗转相除法可以用于计算最大公约数。\\
 
 \mybox{最大公约数}
 
 \begin{lstlisting}[language=Python]
 def gcd(a, b):
-    if b == 0:
-        return a
-    return gcd(b, a % b)
-
-
-def euclid_gcd(a, b):
     while b != 0:
         remainder = a % b
         a = b
         b = remainder
     return a
+
+
+def euclid_gcd(a, b):
+    if b == 0:
+        return a
+    return gcd(b, a % b)
 \end{lstlisting}
 
 \vspace{0.5cm}
@@ -119,5 +119,222 @@ def lcm(a, b):
     (a) $ 7^{10} \text{mod}\ 5 = 2^{10} \text{mod}\ 5 = 4 $\\
     (b) $ 7^{100} \text{mod}\ 3 = 1^{100} \text{mod}\ 5 = 1 $
 \end{tcolorbox}
+
+\newpage
+
+\section{希尔密码}
+
+\subsection{希尔密码（Hill Cipher）}
+
+希尔密码运用基本矩阵运算来对明文加密，它将字母$ A \sim Z $用$ 0 \sim 25 $表示。因此一段长度为$ n $的明文可以表示成一个包含$ n $个元素的明文矩阵。将这个明文矩阵与密钥矩阵相乘，得到的结果经过模26后就是密文。\\
+
+例如密钥矩阵为：
+
+\[
+    \begin{bmatrix}
+        1  & 2 & 3 \\
+        4  & 5 & 6 \\
+        11 & 9 & 8
+    \end{bmatrix}
+\]
+
+\vspace{0.5cm}
+
+明文为$ ABC = (0, 1, 2) $。\\
+
+密文可以通过矩阵乘法得到：
+
+$$
+    \begin{bmatrix}
+        1  & 2 & 3 \\
+        4  & 5 & 6 \\
+        11 & 9 & 8
+    \end{bmatrix}
+    \times
+    \begin{bmatrix}
+        0 \\
+        1 \\
+        2
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        8  \\
+        17 \\
+        0
+    \end{bmatrix}
+    \ (\text{mod}\ 26) = IRA
+$$
+
+\vspace{0.5cm}
+
+希尔密码的好处在于，如果明文中的一个字母发生变化，密文中所有的字母都会受到影响。\\
+
+例如当明文为$ BBC = {1, 1, 2} $时：
+
+$$
+    \begin{bmatrix}
+        1  & 2 & 3 \\
+        4  & 5 & 6 \\
+        11 & 9 & 8
+    \end{bmatrix}
+    \times
+    \begin{bmatrix}
+        1 \\
+        1 \\
+        2
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        9  \\
+        21 \\
+        10
+    \end{bmatrix}
+    \ (\text{mod}\ 26) = JVK\\
+$$
+
+\vspace{0.5cm}
+
+\subsection{解密}
+
+例如已知一个模5的密钥矩阵：
+
+\[
+    K =
+    \begin{bmatrix}
+        1 & 0 & 1 \\
+        1 & 2 & 1 \\
+        3 & 1 & 4
+    \end{bmatrix}
+\]
+
+\vspace{0.5cm}
+
+和一个待破解的密文：
+
+\[
+    C =
+    \begin{bmatrix}
+        A & F & S \\
+        A & S & E \\
+        F & A & E
+    \end{bmatrix}
+\]
+
+\vspace{0.5cm}
+
+以及字母与数字的对应关系：\\
+
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{5mm}{
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            0 & 1 & 2 & 3 & 4 \\
+            \hline
+            A & E & F & S & T \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+希尔密码的解密过程如下：
+
+\begin{enumerate}
+    \item 计算密钥矩阵$ K $的模逆矩阵$ K^{-1} $
+    \item 计算$ K^{-1} \times C $
+    \item 将结果转换为字母
+\end{enumerate}
+
+利用初等行变换，可以计算$ K $的模逆矩阵$ K^{-1} $。注意在矩阵的运算过程中，始终要保证模5的操作，如$ 0 - 1 = 4 $。
+
+\begin{alignat*}{2}
+    \begin{sysmatrix}{ccc|ccc}
+        1 & 0 & 1 & 1 & 0 & 0 \\
+        1 & 2 & 1 & 0 & 1 & 0 \\
+        3 & 1 & 4 & 0 & 0 & 1
+    \end{sysmatrix}
+     & \!\begin{aligned}
+         & \ro{R_2 = R_2 - R_1}  \\
+         & \ro{R_3 = R_3 - 3R_1}
+    \end{aligned}
+    \begin{sysmatrix}{ccc|ccc}
+        1 & 0 & 1 & 1 & 0 & 0 \\
+        0 & 2 & 0 & 4 & 1 & 0 \\
+        0 & 1 & 1 & 2 & 0 & 1
+    \end{sysmatrix}
+    \\
+     & \!\begin{aligned}
+         & \ro{R_2 = R_2 - R_3} \\
+         & \ro{R_3 = R_3 - R2}
+    \end{aligned}
+    \begin{sysmatrix}{ccc|ccc}
+        1 & 0 & 1 & 1 & 0 & 0 \\
+        0 & 1 & 4 & 2 & 1 & 4 \\
+        0 & 0 & 2 & 0 & 4 & 2
+    \end{sysmatrix}
+    \\
+     & \!\begin{aligned}
+         & \ro{R_3 = R_3 / 2}
+    \end{aligned}
+    \begin{sysmatrix}{ccc|ccc}
+        1 & 0 & 1 & 1 & 0 & 0 \\
+        0 & 1 & 4 & 2 & 1 & 4 \\
+        0 & 0 & 1 & 0 & 2 & 1
+    \end{sysmatrix}
+    \\
+     & \!\begin{aligned}
+         & \ro{R_1 = R_1 - R_3} \\
+         & \ro{R_2 = R_2 - 4R3}
+    \end{aligned}
+    \begin{sysmatrix}{ccc|ccc}
+        1 & 0 & 0 & 1 & 3 & 4 \\
+        0 & 1 & 0 & 2 & 3 & 0 \\
+        0 & 0 & 1 & 0 & 2 & 1
+    \end{sysmatrix}
+\end{alignat*}
+
+\begin{align*}
+    K^{-1} \times C & =
+    \begin{bmatrix}
+        1 & 3 & 4 \\
+        2 & 3 & 0 \\
+        0 & 2 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        A & F & S \\
+        A & S & E \\
+        F & A & E
+    \end{bmatrix}
+    \\
+                    & =
+    \begin{bmatrix}
+        1 & 3 & 4 \\
+        2 & 3 & 0 \\
+        0 & 2 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        0 & 2 & 3 \\
+        0 & 3 & 1 \\
+        2 & 0 & 1
+    \end{bmatrix}
+    \\
+                    & =
+    \begin{bmatrix}
+        3 & 1 & 0 \\
+        0 & 3 & 4 \\
+        2 & 1 & 3
+    \end{bmatrix}
+    \\
+                    & =
+    \begin{bmatrix}
+        S & E & A \\
+        A & S & T \\
+        F & E & S
+    \end{bmatrix}
+\end{align*}
+
+\vspace{0.5cm}
+
+最终得到明文为SAFE SEATS。
 
 \newpage

@@ -28,6 +28,7 @@
 \usepackage{dcolumn}
 \usepackage{algpseudocode}
 \usepackage{pgfplots}
+\usepackage{mathtools}
 
 \usetikzlibrary{calc,positioning,arrows,fit,shapes}
 \usetikzlibrary{shapes.multipart,chains}
@@ -36,6 +37,15 @@
 \usetikzlibrary{matrix,backgrounds}
 \usetikzlibrary{automata}
 \usetikzlibrary{scopes}
+
+\newenvironment{sysmatrix}[1]
+ {\left(\begin{array}{@{}#1@{}}}
+ {\end{array}\right)}
+\newcommand{\ro}[1]{%
+  \xrightarrow{\mathmakebox[\rowidth]{#1}}%
+}
+\newlength{\rowidth}% row operation width
+\AtBeginDocument{\setlength{\rowidth}{5em}}
 
 \tikzset{
 	->,
