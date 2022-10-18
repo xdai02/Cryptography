@@ -1,0 +1,123 @@
+\chapter{现代密码学}
+
+\section{RSA}
+
+\subsection{RSA}
+
+RSA是一种非对称加密（asymmetric cryptography）算法，在1977年由Ron Rivest、Adi ShamirLeonard Adleman一起提出，RSA就是他们三人姓氏的首字母。\\
+
+所谓非对称加密，是指在网络通信中双方各有一对密钥，其中公钥（public key）被公开给外界，用于加密；私钥（private key）只有自己知道，用于解密。\\
+
+例如Alice的一组密钥为$ (P_A, S_A) $，Bob的一组密钥为$ (P_B, S_B) $。对一段消息$ M $加密和解密的操作是互逆的：
+
+\vspace{-1cm}
+
+\begin{align*}
+    M & = S_A(P_A(M)) \\
+    M & = P_A(S_A(M))
+\end{align*}
+
+如果Bob想要给Alice发送消息，Bob首先使用Alice的公钥$ P_A $对消息$ M $进行加密得到密文$ C $：
+
+\vspace{-1cm}
+
+\begin{align*}
+    C = P_A(M)
+\end{align*}
+
+Bob将密文$ C $发送给Alice，Alice使用自己的私钥$ S_A $对密文$ C $进行解密得到原文$ M $：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S_A(C) = S_A(P_A(M)) = M
+\end{align*}
+
+\vspace{0.5cm}
+
+\subsection{公钥/私钥生成}
+
+RSA的安全性依赖于大整数的质因数分解，也就是对于两个大素数$ p $和$ q $而言，计算它们的乘积$ pq $很容易，但是从积$ pq $分解出$ p $和$ q $是个公认的数学难题。\\
+
+RSA公钥和私钥生成的过程如下：
+
+\begin{enumerate}
+    \item 随机选择两个大素数（超过100位），为了简化说明，这里采用较小的素数$ p = 41 $、$ q = 59 $
+
+    \item 计算$ p $和$ q $的乘积$ n = pq = 2419 $
+
+    \item 计算$ p - 1 $与$ q - 1 $的乘积$ \phi(n) = (p-1)(q-1) = 40 * 58 = 2320 $
+
+    \item 选择一个小奇数$ e $，使得$ gcd(e, \phi(n)) = 1$，例如$ e = 3 $
+
+    \item 计算$ d $，使得$ d * e \equiv 1\ (\text{mod}\ \phi(n)) $。当$ d = 1547 $时，$ 1547 * 3\ \text{mod}\ 2320 = 1 $
+
+    \item 公钥$ P = (e, n) = (3, 2419) $
+
+    \item 私钥$ S = (d, n) = (1547, 2419) $
+
+    \item 对消息$ M $加密的过程为$ P(M) = M^e\ (\text{mod}\ n) = M^3\ (\text{mod}\ 2419) $
+
+    \item 对消息$ M $解密的过程为$ S(M) = M^d\ (\text{mod}\ n) = M^{1547}\ (\text{mod}\ 2419) $
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\subsection{加密}
+
+假设Alice的公钥为$ (9, 2419) $，想要将消息“PACE”发送给Bob。\\
+
+首先将消息中的英文字母转换为对应的编码：
+
+\begin{itemize}
+    \item PA = 1500
+    \item CE = 0204
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{5mm}{
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Letter} & \textbf{Code} & \textbf{Letter} & \textbf{Code} \\
+            \hline
+            A               & 00            & B               & 01            \\
+            \hline
+            C               & 02            & D               & 03            \\
+            \hline
+            E               & 04            & F               & 05            \\
+            \hline
+            G               & 06            & H               & 07            \\
+            \hline
+            I               & 08            & J               & 09            \\
+            \hline
+            K               & 10            & L               & 11            \\
+            \hline
+            M               & 12            & N               & 13            \\
+            \hline
+            O               & 14            & P               & 15            \\
+            \hline
+            Q               & 16            & R               & 17            \\
+            \hline
+            S               & 18            & T               & 19            \\
+            \hline
+            U               & 20            & V               & 21            \\
+            \hline
+            W               & 22            & X               & 23            \\
+            \hline
+            Y               & 24            & Z               & 25            \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+分别对PA和CE进行加密：
+
+\begin{itemize}
+    \item $ P(1500) = 1500^9\ (\text{mod}\ 2419) = 1655 $
+    \item $ P(0204) = 204^9\ (\text{mod}\ 2419) = 1639 $
+\end{itemize}
+
+最终形成的密文为1655 1639。
+
+\newpage

@@ -122,6 +122,86 @@ def lcm(a, b):
 
 \newpage
 
+\section{中国余数定理}
+
+\subsection{中国余数定理（CRT, Chinese Remainder Theorem）}
+
+中国余数定理/孙子定理是中国古代求解一次同余式组的算法。在《孙子算经》中有一个叫“物不知数”的问题：\\
+
+有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二。问物几何？\\
+
+也就是说，一个整数$ x $除以三余二，除以五余三，除以七余二，求这个整数。\\
+
+该问题可表示为：
+
+\vspace{-1cm}
+
+\begin{align*}
+    x \equiv 2\ (\text{mod}\ 3) \\
+    x \equiv 3\ (\text{mod}\ 5) \\
+    x \equiv 2\ (\text{mod}\ 7)
+\end{align*}
+
+或者：
+
+\vspace{-1cm}
+
+\begin{align*}
+    x = (2, 3, 2)S(3, 5, 7)
+\end{align*}
+
+对于只有两个同余式的问题，可以通过列表的方式直接求解。\\
+
+例如$ x = (2, 4)S(3, 5) $，需要创建一个3行5列的表格，然后以对角线的顺序，从0开始依次填入数字。
+
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{5mm}{
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+                       & \textbf{0}           & \textbf{1}           & \textbf{2}             & \textbf{3}             & \textbf{4}             \\
+            \hline
+            \textbf{0} & \textcolor{red}{0}   & \textcolor{green}{6} & \textcolor{purple}{12} & \textcolor{blue}{3}    & \textcolor{cyan}{9}    \\
+            \hline
+            \textbf{1} & \textcolor{cyan}{10} & \textcolor{red}{1}   & \textcolor{green}{7}   & \textcolor{purple}{13} & \textcolor{blue}{4}    \\
+            \hline
+            \textbf{2} & \textcolor{blue}{5}  & \textcolor{cyan}{11} & \textcolor{red}{2}     & \textcolor{green}{8}   & \textcolor{purple}{14} \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+找到表格第2行第3列的数值，即$ x = 8 $。\\
+
+同理，用同样的方法可以算出$ (2, 4)S(3, 5) = 14 $。\\
+
+除了列表的方法外，还有一种更加通用的求解同余式组算法。例如对于$ (2, 3, 4)S(3, 5, 13) $这个问题，$ (3, 5, 13) $中两两互素。\\
+
+如果只考虑$ (4)S(13) $，那么可以得出$ x_0 = 4 $。\\
+
+然后再进一步考虑$ (3, 4)S(5, 13) $的情况，那么
+
+\vspace{-1cm}
+
+\begin{align*}
+    x_1 & = 4 + 13m = 3\ (\text{mod}\ 5)                              \\
+        & = 4 + 13 \times 1 = 17\ \text{（不满足3\ (\text{mod}\ 5)）} \\
+        & = 4 + 13 \times 2 = 30\ \text{（不满足3\ (\text{mod}\ 5)）} \\
+        & = 4 + 13 \times 3 = 43
+\end{align*}
+
+最后在目前的情况下考虑$ (2, 3, 4)S(3, 5, 13) $，那么可以得出
+
+\vspace{-1cm}
+
+\begin{align*}
+    x_2 & = 43 + (5 \times 13)m = 2\ (\text{mod}\ 3)                    \\
+        & = 43 + 65 \times 1 = 108\ \text{（不满足2\ (\text{mod}\ 3)）} \\
+        & = 43 + 65 \times 2= 173
+\end{align*}
+
+\newpage
+
 \section{希尔密码}
 
 \subsection{希尔密码（Hill Cipher）}
@@ -222,7 +302,7 @@ $$
 
 \vspace{0.5cm}
 
-以及字母与数字的对应关系：\\
+以及字母与数字的对应关系：
 
 \begin{table}[H]
     \centering

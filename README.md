@@ -11,13 +11,13 @@
 - 第2章：数论
     - 2.1 最大公约数 / 最小公倍数
     - 2.2 同余定理
-    - 2.3 希尔密码
+    - 2.3 中国余数定理
+    - 2.4 希尔密码
 
+- 第3章：现代密码学
+    - 3.1 RSA
+    - 3.2 
 
-公钥密码学：RSA、El-Gamal、格、加密与签名、Diffie-Hellman
-分组密码：AES、DES
-HASH：MD5、SHA
-
-Fields, Rings
-El-Gamal & ECC
-Pre-Amble
+对称加密：DES、AES
+Hash：MD5、SHA
+加密与签名
