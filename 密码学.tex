@@ -37,6 +37,12 @@
 \usetikzlibrary{matrix,backgrounds}
 \usetikzlibrary{automata}
 \usetikzlibrary{scopes}
+\usetikzlibrary{shapes.geometric}
+
+\tikzstyle{startend} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
+\tikzstyle{process}   = [rectangle, minimum width=3cm, minimum height=1cm, inner ysep=0, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow}     = [thick,->,>=stealth]
+\tikzstyle{XORgate} = [draw,circle]
 
 \newenvironment{sysmatrix}[1]
  {\left(\begin{array}{@{}#1@{}}}
