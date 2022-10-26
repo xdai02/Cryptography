@@ -26,7 +26,7 @@ def xor(x, y):
 
 class DES:
     # Permuted Choice (PC)
-    PC_1 = [
+    __PC_1 = [
         57, 49, 41, 33, 25, 17, 9,
         1, 58, 50, 42, 34, 26, 18,
         10, 2, 59, 51, 43, 35, 27,
@@ -37,7 +37,7 @@ class DES:
         21, 13, 5, 28, 20, 12, 4
     ]
 
-    PC_2 = [
+    __PC_2 = [
         14, 17, 11, 24, 1, 5,
         3, 28, 15, 6, 21, 10,
         23, 19, 12, 4, 26, 8,
@@ -49,10 +49,10 @@ class DES:
     ]
 
     # Circular shift left amount for each iteration in key generation
-    SHIFT_TABLE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
+    __SHIFT_TABLE = [1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1]
 
     # Initial Permutation (IP)
-    IP = [
+    __IP = [
         58, 50, 42, 34, 26, 18, 10, 2,
         60, 52, 44, 36, 28, 20, 12, 4,
         62, 54, 46, 38, 30, 22, 14, 6,
@@ -64,7 +64,7 @@ class DES:
     ]
 
     # Expansion Permutation
-    E = [
+    __E = [
         32, 1, 2, 3, 4, 5, 4, 5,
         6, 7, 8, 9, 8, 9, 10, 11,
         12, 13, 12, 13, 14, 15, 16, 17,
@@ -74,7 +74,7 @@ class DES:
     ]
 
     # S-Box Substitution
-    S_BOX = [
+    __S_BOX = [
         # S1
         [
             [14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7],
@@ -134,7 +134,7 @@ class DES:
     ]
 
     # P-Box Permutation
-    P_BOX = [
+    __P_BOX = [
         16, 7, 20, 21,
         29, 12, 28, 17,
         1, 15, 23, 26,
@@ -146,7 +146,7 @@ class DES:
     ]
 
     # Final Permutation (FP)
-    FP = [
+    __FP = [
         40, 8, 48, 16, 56, 24, 64, 32,
         39, 7, 47, 15, 55, 23, 63, 31,
         38, 6, 46, 14, 54, 22, 62, 30,
@@ -163,7 +163,7 @@ class DES:
 
         # permute key using PC-1 (remove each 8th parity bit)
         # will get a 56-bit key
-        key = self.__permute(key, self.PC_1, 56)
+        key = self.__permute(key, self.__PC_1, 56)
 
         # split key into two 28-bit halves
         left = key[0:28]
@@ -173,12 +173,12 @@ class DES:
         self.__round_keys = []
         for i in range(16):
             # circular shift left and right halves
-            left = shift_left(left, self.SHIFT_TABLE[i])
-            right = shift_left(right, self.SHIFT_TABLE[i])
+            left = shift_left(left, self.__SHIFT_TABLE[i])
+            right = shift_left(right, self.__SHIFT_TABLE[i])
             key = left + right
 
             # compress key from 56 to 48 bits
-            key = self.__permute(key, self.PC_2, 48)
+            key = self.__permute(key, self.__PC_2, 48)
             self.__round_keys.append(key)
 
     def __permute(self, key, table, n):
@@ -192,7 +192,7 @@ class DES:
         plaintext = hex2bin(plaintext)
 
         # Initial Permutation (IP)
-        plaintext = self.__permute(plaintext, self.IP, 64)
+        plaintext = self.__permute(plaintext, self.__IP, 64)
 
         # split plaintext into two 32-bit halves
         left = plaintext[0:32]
@@ -202,7 +202,7 @@ class DES:
         for i in range(16):
             # Expansion Permutation (E)
             # expand 32-bit right half to 48 bits
-            right_half = self.__permute(right, self.E, 48)
+            right_half = self.__permute(right, self.__E, 48)
 
             # XOR right_half and round_keys[i]
             right_half = xor(right_half, self.__round_keys[i])
@@ -216,13 +216,13 @@ class DES:
                 col = int(blocks[j][1:5], 2)
 
                 # replace block with S-Box value
-                blocks[j] = bin(self.S_BOX[j][row][col])[2:].zfill(4)
+                blocks[j] = bin(self.__S_BOX[j][row][col])[2:].zfill(4)
 
             # combine blocks into one 32-bit string
             right_half = ''.join(blocks)
 
             # P-Box Permutation
-            right_half = self.__permute(right_half, self.P_BOX, 32)
+            right_half = self.__permute(right_half, self.__P_BOX, 32)
 
             # XOR left and right_half
             left = xor(left, right_half)
@@ -235,7 +235,7 @@ class DES:
         ciphertext = left + right
 
         # Final Permutation (FP)
-        ciphertext = self.__permute(ciphertext, self.FP, 64)
+        ciphertext = self.__permute(ciphertext, self.__FP, 64)
         return bin2hex(ciphertext)
 
 
