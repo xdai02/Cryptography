@@ -1,5 +1,67 @@
 \chapter{现代密码学}
 
+\section{哈希算法}
+
+\subsection{哈希函数（Hash Function）}
+
+哈希函数可以把任意长度的数据转换为一个为固定长度的结果，其中要计算的数据称为源数据，计算后的结果数据称为哈希值或摘要（digest）。\\
+
+不同的哈希函数对应不同的哈希算法，常见的有MD5（Message Digest Algorithm 5）、SHA1（Secure Hash Algorithm）、SHA224、SHA256、SHA384、SHA512等。\\
+
+哈希算法的特点包括：
+
+\begin{itemize}
+    \item 对相同的源数据采用相同的哈希算法，得到的哈希值一定相同。
+    \item 无论源数据有多长，哈希值的长度都是固定的。
+    \item 算法不可逆，即无法从哈希值反向推导出源数据。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsection{哈希冲突（Hash Collision）}
+
+对于不同的源数据使用同样的哈希算法，有可能会产生相同的哈希值，这种现象称为哈希冲突。\\
+
+一般来说，源数据的长度越长，哈希冲突的概率越小，但耗费的计算时长也越长。例如MD5算法，冲突率非常小，约等于$ 1.47 \times 10^{-29} $，几乎可以忽略不计。\\
+
+\mybox{哈希函数}
+
+\begin{lstlisting}[language=Python]
+import hashlib
+
+
+def md5(plaintext):
+    h = hashlib.md5()
+    h.update(plaintext.encode())
+    return h.hexdigest()
+
+
+def sha256(plaintext):
+    h = hashlib.sha256()
+    h.update(plaintext.encode())
+    return h.hexdigest()
+
+
+def sha512(plaintext):
+    h = hashlib.sha512()
+    h.update(plaintext.encode())
+    return h.hexdigest()
+
+
+def main():
+    plaintext = "Hello World"
+
+    print("MD5: ", md5(plaintext))
+    print("SHA256: ", sha256(plaintext))
+    print("SHA512: ", sha512(plaintext))
+
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\newpage
+
 \section{RSA}
 
 \subsection{RSA}
